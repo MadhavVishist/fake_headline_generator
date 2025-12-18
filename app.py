@@ -34,7 +34,7 @@ def load_font(size):
 # --- 1. DATASETS (The "Peak Brainrot" Collection) ---
 
 subjects_list = [
-    "Modi Ji (Melody Version)", "A 14-year-old Sigma Male", "The 'System' Guy", 
+    "Modi Ji","Rahul Gandhi", "Arvind Kejariwal", "A 14-year-old Sigma Male", "The 'System' Guy", 
     "Alakh Sir's Aggressive Whiteboard", "Lord Puneet Superstar", "A Depressed JEE Aspirant", 
     "A Corporate Majdoor on Notice Period", "Dolly Chaiwala", "Orry (Just Orry)", 
     "The Ghost of a 90s Govinda", "A South Delhi 'Healer'", "Bhupendra Jogi", 
