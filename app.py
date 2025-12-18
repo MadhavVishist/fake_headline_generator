@@ -9,6 +9,13 @@ import os
 FONT_PATH = "fonts/Montserrat-Bold.ttf"
 if not os.path.exists(FONT_PATH):
     FONT_PATH = None
+
+
+def load_font(size):
+    if FONT_PATH:
+        return ImageFont.truetype(FONT_PATH, size)
+    return ImageFont.load_default()
+
 # --- 1. DATASETS (The "Peak Brainrot" Collection) ---
 
 subjects_list = [
@@ -44,14 +51,12 @@ places = [
     "the backrooms of Sarojini Market"
 ]
 
-# --- 2. THE HELPER: SMART TEXT RESIZING (Fixes Cut-off Issues) ---
-def get_fitted_font(draw, text, font_path, max_width, max_height, start_size=80):
+def get_fitted_font(draw, text, max_width, max_height, start_size=80):
     size = start_size
 
     while size >= 24:
-        font = ImageFont.truetype(font_path, size)
+        font = load_font(size)
 
-        # Wrap text based on width
         avg_char_width = size * 0.55
         chars_per_line = max(15, int(max_width / avg_char_width))
         wrapped = textwrap.fill(text, width=chars_per_line)
@@ -60,20 +65,19 @@ def get_fitted_font(draw, text, font_path, max_width, max_height, start_size=80)
             (0, 0),
             wrapped,
             font=font,
-            spacing=12,
+            spacing=14,
             align="center"
         )
 
-        text_w = bbox[2] - bbox[0]
-        text_h = bbox[3] - bbox[1]
+        w = bbox[2] - bbox[0]
+        h = bbox[3] - bbox[1]
 
-        if text_w <= max_width and text_h <= max_height:
+        if w <= max_width and h <= max_height:
             return font, wrapped
 
         size -= 2
 
-    # Last-resort fallback (never breaks layout)
-    return ImageFont.truetype(font_path, 24), textwrap.fill(text, width=30)
+    return load_font(24), textwrap.fill(text, width=30)
 
 
 # --- 3. THE IMPROVED IMAGE ENGINE (HD & Full Width) ---
@@ -100,14 +104,11 @@ def generate_news_card(headline_text):
     draw.rectangle([50, banner_y - 60, 450, banner_y], fill=(240, 240, 240))
     
     # Load Fonts
-    try:
-        font_title = ImageFont.truetype("arialbd.ttf", 40)
-        font_logo = ImageFont.truetype("arialbd.ttf", 50)
-        font_ticker = ImageFont.truetype("arial.ttf", 35)
-    except:
-        font_title = ImageFont.load_default()
-        font_logo = ImageFont.load_default()
-        font_ticker = ImageFont.load_default()
+    font_title = load_font(40)
+    font_logo = load_font(50)
+    font_ticker = load_font(35)
+
+
 
     draw.text((70, banner_y - 50), "BREAKING NEWS", fill="black", font=font_title)
 
@@ -118,7 +119,10 @@ def generate_news_card(headline_text):
     # This ensures the text fits perfectly in the red box
     safe_w = W - 100
     safe_h = banner_h - 40
-    font_headline, wrapped_text = get_fitted_font(draw, headline_text.upper(), "arialbd.ttf", safe_w, safe_h, start_size=80)
+    font_headline, wrapped_text = get_fitted_font(
+        draw, headline_text.upper(), safe_w, safe_h, start_size=80
+    )
+
     
     # Center the text
     bbox = draw.multiline_textbbox((0, 0), wrapped_text, font=font_headline, spacing=15)
