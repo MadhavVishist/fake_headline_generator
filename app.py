@@ -14,10 +14,15 @@ if not os.path.exists(FONT_PATH):
 def load_font(size):
     fonts_to_try = [
         "fonts/Montserrat-Bold.ttf",
-        "C:\\Windows\\Fonts\\arial.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",  # Linux
+        "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf",  # Alternative Linux
+        "/System/Library/Fonts/Arial.ttf",  # macOS
+        "C:\\Windows\\Fonts\\arial.ttf",  # Windows
         "C:\\Windows\\Fonts\\Arial.ttf",
         "arial.ttf",
-        "Arial"
+        "Arial",
+        "DejaVuSans-Bold.ttf",
+        "LiberationSans-Bold.ttf"
     ]
     for font_path in fonts_to_try:
         try:
@@ -229,4 +234,4 @@ with col1:
 # Sidebar (Your preferred footer placement)
 st.sidebar.markdown("### **NOTICE**")
 st.sidebar.code("This is a fake \nnews generator for \nentertainment purposes \nonly. Any resemblance\n to real persons, \nliving or dead, \nis purely coincidental.")
-st.sidebar.write("Developed for fun by Madhav vishist")
+st.sidebar.write("Developed for fun by MadhavVishist")
