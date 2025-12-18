@@ -229,4 +229,4 @@ with col1:
 # Sidebar (Your preferred footer placement)
 st.sidebar.markdown("### **NOTICE**")
 st.sidebar.code("This is a fake \nnews generator for \nentertainment purposes \nonly. Any resemblance\n to real persons, \nliving or dead, \nis purely coincidental.")
-st.sidebar.write("Developed for fun by Madhav ")
+st.sidebar.write("Developed for fun by Madhav vishist")
