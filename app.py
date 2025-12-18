@@ -12,8 +12,18 @@ if not os.path.exists(FONT_PATH):
 
 
 def load_font(size):
-    if FONT_PATH:
-        return ImageFont.truetype(FONT_PATH, size)
+    fonts_to_try = [
+        "fonts/Montserrat-Bold.ttf",
+        "C:\\Windows\\Fonts\\arial.ttf",
+        "C:\\Windows\\Fonts\\Arial.ttf",
+        "arial.ttf",
+        "Arial"
+    ]
+    for font_path in fonts_to_try:
+        try:
+            return ImageFont.truetype(font_path, size)
+        except (OSError, IOError):
+            continue
     return ImageFont.load_default()
 
 # --- 1. DATASETS (The "Peak Brainrot" Collection) ---
@@ -80,6 +90,19 @@ def get_fitted_font(draw, text, max_width, max_height, start_size=80):
     return load_font(24), textwrap.fill(text, width=30)
 
 
+def get_single_font_size(draw, text, max_width, max_height, start_size=80):
+    size = start_size
+    while size >= 12:
+        font = load_font(size)
+        bbox = draw.textbbox((0, 0), text, font=font)
+        w = bbox[2] - bbox[0]
+        h = bbox[3] - bbox[1]
+        if w <= max_width and h <= max_height:
+            return size
+        size -= 2
+    return 12
+
+
 # --- 3. THE IMPROVED IMAGE ENGINE (HD & Full Width) ---
 def generate_news_card(headline_text):
     # Canvas Size (HD 1280x720 for crisp text)
@@ -104,9 +127,14 @@ def generate_news_card(headline_text):
     draw.rectangle([50, banner_y - 60, 450, banner_y], fill=(240, 240, 240))
     
     # Load Fonts
-    font_title = load_font(40)
-    font_logo = load_font(50)
-    font_ticker = load_font(35)
+    size_title = get_single_font_size(draw, "BREAKING NEWS", 400, 60, 80)
+    font_title = load_font(size_title)
+    
+    size_logo = get_single_font_size(draw, "DANK TV 24x7", 450, 50, 80)
+    font_logo = load_font(size_logo)
+    
+    size_ticker = get_single_font_size(draw, "LIVE: NO ONE IS SAFE | JANTA JAWAB CHAHTI HAI | MOYE MOYE", W-60, 80, 80)
+    font_ticker = load_font(size_ticker)
 
 
 
@@ -120,7 +148,7 @@ def generate_news_card(headline_text):
     safe_w = W - 100
     safe_h = banner_h - 40
     font_headline, wrapped_text = get_fitted_font(
-        draw, headline_text.upper(), safe_w, safe_h, start_size=80
+        draw, headline_text.upper(), safe_w, safe_h, start_size=100
     )
 
     
@@ -135,12 +163,12 @@ def generate_news_card(headline_text):
 
     # 6. Yellow Ticker Tape (Bottom)
     draw.rectangle([0, H - 80, W, H], fill=(255, 215, 0))
-    ticker_text = "🔴 LIVE: NO ONE IS SAFE | JANTA JAWAB CHAHTI HAI | MOYE MOYE 🧢"
+    ticker_text = "LIVE: NO ONE IS SAFE | JANTA JAWAB CHAHTI HAI | MOYE MOYE"
     draw.text((30, H - 60), ticker_text, fill="black", font=font_ticker)
 
     # 7. Live Bug (Top Left)
     draw.rectangle([30, 30, 160, 80], fill=(200, 0, 0))
-    draw.text((45, 38), "🔴 LIVE", fill="white", font=font_ticker)
+    draw.text((45, 38), "LIVE", fill="white", font=font_ticker)
 
     return img
 
@@ -201,4 +229,4 @@ with col1:
 # Sidebar (Your preferred footer placement)
 st.sidebar.markdown("### **NOTICE**")
 st.sidebar.code("This is a fake \nnews generator for \nentertainment purposes \nonly. Any resemblance\n to real persons, \nliving or dead, \nis purely coincidental.")
-st.sidebar.write("Developed for fun by Madhav Vishist.")
+st.sidebar.write("Developed for fun by Madhav ")
